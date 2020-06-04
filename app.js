@@ -19,6 +19,8 @@ const url = `mongodb+srv://Sergi:${pass}@cluster0-ej6db.mongodb.net/nodeBooks?re
 // Create a new MongoClient
 const client = new MongoClient(url, {useUnifiedTopology: true});
 
+
+
 var app = express();
 
 
@@ -46,10 +48,19 @@ app.use(function(req, res, next) {
 // Use connect method to connect to the Server
 client.connect(function(err) {
   assert.equal(null, err);
-  console.log("Connected successfully to server");
+
+  // Results
+  // const db = client.db('nodeBooks');
+  // const booksCollection = db.collection('books'); 
+  // console.log("Connected successfully to server");
+  
+  // booksCollection.find().toArray(function(err, result){
+  //   if(err) throw err;
+  //   console.log(result);
+  // });
 
   app.get('/', (req, res) => {
-    res.render('index')
+  res.render('index')
   });
 });
 

@@ -7,10 +7,19 @@ exports.index = function(req, res) {
 
     let result;
 
+    // This would return the number of data using this Model?
     async function bookCount() {
         try {
             // result = await Book.countDocuments({});
-            result = 5;
+            Book.count({type: "books"}, function (err, count) {
+                result = count;
+                if(err) {
+                    console.log(err)
+                } else {
+                    console.log(count)
+                }
+            });
+           
         } catch (err) {
             console.log(err);
         }
