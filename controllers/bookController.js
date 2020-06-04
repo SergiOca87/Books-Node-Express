@@ -5,14 +5,24 @@ var BookInstance = require('../models/bookInstance');
 
 exports.index = function(req, res) {
 
-    // async function bookCount() {
-    //     const result = await Book.countDocuments({});
-    //     console.log(result);
-    // }
+    let result;
 
-   
+    async function bookCount() {
+        try {
+            // result = await Book.countDocuments({});
+            result = 5;
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
-    res.render('index', { title: 'Local Library Home'});
+    
+    bookCount();
+    
+    
+    res.render('index', { title: 'Local Library Home' , data: result });
+    
+
 
     // async.parallel({
     //     book_count: function(callback) {

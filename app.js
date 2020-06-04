@@ -1,23 +1,25 @@
+const MongoClient = require('mongodb').MongoClient;
 var createError = require('http-errors');
+const assert = require('assert');
+require('dotenv').config();
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogueRouter = require('./routes/catalog');
 
-var app = express();
-
 const pass = process.env.DB_PASS
 
-//Set up mongoose connection
-var mongoose = require('mongoose');
-var mongoDB = `mongodb+srv://Sergi:${pass}@cluster0-ej6db.mongodb.net/nodeBooks?retryWrites=true&w=majority`;
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+// Connection URL
+const url = `mongodb+srv://Sergi:${pass}@cluster0-ej6db.mongodb.net/nodeBooks?retryWrites=true&w=majority`;
+
+// Create a new MongoClient
+const client = new MongoClient(url, {useUnifiedTopology: true});
+
+var app = express();
 
 
 // view engine setup
@@ -38,6 +40,17 @@ app.use('/catalog', catalogueRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+});
+
+
+// Use connect method to connect to the Server
+client.connect(function(err) {
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+
+  app.get('/', (req, res) => {
+    res.render('index')
+  });
 });
 
 // error handler
