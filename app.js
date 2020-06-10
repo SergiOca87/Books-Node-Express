@@ -17,9 +17,9 @@ const pass = process.env.DB_PASS
 const url = `mongodb+srv://Sergi:${pass}@cluster0-ej6db.mongodb.net/nodeBooks?retryWrites=true&w=majority`;
 
 // Create a new MongoClient
-const client = new MongoClient(url, {useUnifiedTopology: true});
+// const client = new MongoClient(url, {useUnifiedTopology: true, useNewUrlParser: true});
 
-
+mongoose.connect(url, {useUnifiedTopology: true, useNewUrlParser: true});
 
 var app = express();
 
@@ -46,23 +46,23 @@ app.use(function(req, res, next) {
 
 
 // Use connect method to connect to the Server
-client.connect(function(err) {
-  assert.equal(null, err);
+// client.connect(function(err) {
+//   assert.equal(null, err);
 
-  // Results
-  // const db = client.db('nodeBooks');
-  // const booksCollection = db.collection('books'); 
-  // console.log("Connected successfully to server");
+//   // Results
+//   const db = client.db('nodeBooks');
+//   const booksCollection = db.collection('books'); 
+//   console.log("Connected successfully to server");
   
-  // booksCollection.find().toArray(function(err, result){
-  //   if(err) throw err;
-  //   console.log(result);
-  // });
+//   booksCollection.find().toArray(function(err, result){
+//     if(err) throw err;
+//     console.log(result);
+//   });
 
-  app.get('/', (req, res) => {
-  res.render('index')
-  });
-});
+//   app.get('/', (req, res) => {
+//    res.render('index')
+//   });
+// });
 
 // error handler
 app.use(function(err, req, res, next) {
