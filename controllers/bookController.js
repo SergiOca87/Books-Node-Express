@@ -10,10 +10,21 @@ var mongoose = require('mongoose');
 const { body,validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 
-exports.index = function(req, res) {
+exports.index = async(req, res) => {
 
-    let result;
+    let bookCount;
 
+    try {
+        await Book.countDocuments({}, function(err, count) {
+            bookCount = count;
+        });
+
+        res.render('index', { title: 'Local Library Home' , message: '', data: bookCount });
+    
+    } catch(err) {
+        res.render('index', { title: 'Local Library Home', message: 'There was a problem retrieving database data' });
+    } 
+   
     // This would return the number of data using this Model?
     // async function bookCount() {
     //     try {
@@ -53,7 +64,7 @@ exports.index = function(req, res) {
     // bookCount();
     
     
-    res.render('index', { title: 'Local Library Home' , data: result });
+    
     
 
 
