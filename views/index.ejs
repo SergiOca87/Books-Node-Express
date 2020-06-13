@@ -1,10 +1,23 @@
 <%- include('header'); -%>
 
 <div class="container">
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <p>We have found <%= data %> number of results.</p>
-    <p><%= message %></p>
+    <div class="row">
+        <div class="col">
+            <h1><%= title %></h1>
+            <p>Welcome to <%= title %></p>
+            <p>Description - Explain Book, author and genre relationships and ORM "paradigm" as opposed to SQL language like you used for the other App, add link.</p>
+            <p><%= message %></p>
+        </div>
+    </div>  
+
+    <div class="row">
+        <div class="col">
+            <h2>Database content:</h2>
+            <p>Books: We have found <%= data[0] %> book/s.</p>
+            <p>Authors: We have found <%= data[1] %> author/s.</p>
+            <p>Genres: We have found <%= data[2] %> genre/s.</p>
+        </div>
+    </div>
 </div>
     
 <%- include('footer'); -%>

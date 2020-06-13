@@ -4,7 +4,7 @@ var Author = require('../models/author');
 var Genre = require('../models/genre');
 var BookInstance = require('../models/bookInstance');
 
-var mongoose = require('mongoose');
+// var mongoose = require('mongoose');
 
 // Express Validator 
 const { body,validationResult } = require('express-validator');
@@ -12,14 +12,20 @@ const { sanitizeBody } = require('express-validator');
 
 exports.index = async(req, res) => {
 
-    let bookCount;
+    let dbCount = [];
 
     try {
-        await Book.countDocuments({}, function(err, count) {
-            bookCount = count;
+        await Book.countDocuments({}, function(err, bookCount) {
+            dbCount.push(bookCount);
+        });
+        await Author.countDocuments({}, function(err, authorCount) {
+            dbCount.push(authorCount);
+        });
+        await Genre.countDocuments({}, function(err, genreCount) {
+            dbCount.push(genreCount);
         });
 
-        res.render('index', { title: 'Local Library Home' , message: '', data: bookCount });
+        res.render('index', { title: 'Local Library Home' , message: '', data: dbCount });
     
     } catch(err) {
         res.render('index', { title: 'Local Library Home', message: 'There was a problem retrieving database data' });
@@ -101,9 +107,17 @@ exports.book_detail = function(req, res) {
 };
 
 // Display book create form on GET.
-exports.book_create_get = function(req, res, next) {
-    //  authors: results.authors, genres: results.genres 
-    res.render('book_form', { title: 'Create Book' });
+exports.book_create_get = async(req, res) => {
+
+    // Query for the existing Genres and pass them down to create a dropdown with existing genres.
+    const genreQuery = Genre.find();
+    const genres = await genreQuery;
+
+    // Query for existing Authors
+    const authorsQuery = Author.find();
+    const authors = await authorsQuery;
+
+    res.render('book_form', { title: 'Create Book', genres: genres, authors: authors });
 };
 
 // Handle book create on POST.
@@ -133,6 +147,16 @@ exports.book_create_post = [
             rating: req.body.rating,
             genre: req.body.genre
            });
+
+        // Genres.find({}, function(err, genres) {
+        //     var genresMap = {};
+        
+        //     genres.forEach(function(user) {
+        //         genresMap[genres._id] = genre;
+        //     });
+        
+        //     res.send(genresMap);  
+        // });
 
         console.log(book);
 

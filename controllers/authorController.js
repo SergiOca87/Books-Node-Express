@@ -1,5 +1,9 @@
 var Author = require('../models/author');
 
+// Express Validator 
+const { body, validationResult } = require('express-validator');
+const { sanitizeBody } = require('express-validator');
+
 // Display list of all Authors.
 exports.author_list = function(req, res) {
     res.send('NOT IMPLEMENTED: Author list');
@@ -12,13 +16,45 @@ exports.author_detail = function(req, res) {
 
 // Display Author create form on GET.
 exports.author_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author create GET');
+    res.render('author_form', {title: 'Add Author'});
 };
 
 // Handle Author create on POST.
-exports.author_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author create POST');
-};
+exports.author_create_post = [
+
+    // Validation
+    body('name', 'Name must not be empty').trim().isLength({min: 1}),
+    body('family_name', 'Family Name must not be empty').trim().isLength({min:1}),
+
+    // Sanitize fields (using wildcard).
+    body('*').escape(),
+
+    (req, res) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        // Create a Book object with escaped and trimmed data.
+        var author = new Author(
+          { first_name: req.body.name,
+            family_name: req.body.family_name
+           });
+
+        console.log(author);
+
+        if (!errors.isEmpty()) {
+            console.log('error');
+            res.render('author_form', { title: 'Add Author', author: author, errors: errors.array() });
+            return;
+        }
+        else {
+            // Data from form is valid. Save author.
+            console.log('success', author);
+            
+            author.save();
+        }
+    }
+];
 
 // Display Author delete form on GET.
 exports.author_delete_get = function(req, res) {
