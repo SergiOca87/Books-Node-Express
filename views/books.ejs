@@ -1,0 +1,14 @@
+<%- include('header'); -%>
+
+<div class="container">
+    <div class="row">
+        <% books.forEach(function(book) { %>
+            <div class="col-md-6 col-lg-4">
+                <h3><%= book.title %></h3>
+                <a href="/catalog/book/<%= book._id %>">More Info</a>
+            </div>
+        <% }); %>
+    </div>
+</div>
+    
+<%- include('footer'); -%>

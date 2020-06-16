@@ -1,0 +1,16 @@
+<%- include('header'); -%>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1><%= book.title %></h1>
+            <!-- How do you get the author and genre? It is referenced by id, Genre is an ID -->
+            <p><strong>By: </strong><br> - </p>
+            <p><strong>Summary:</strong><br><%= book.summary %></p>
+            <p><strong>Rating: </strong><%= book.rating %></p>
+            <p><strong>Genre: </strong> - </p>
+        </div>
+    </div>
+</div>
+    
+<%- include('footer'); -%>

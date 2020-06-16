@@ -4,8 +4,6 @@ var Author = require('../models/author');
 var Genre = require('../models/genre');
 var BookInstance = require('../models/bookInstance');
 
-// var mongoose = require('mongoose');
-
 // Express Validator 
 const { body,validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
@@ -15,100 +13,56 @@ exports.index = async(req, res) => {
     let dbCount = [];
 
     try {
-        await Book.countDocuments({}, function(err, bookCount) {
-            dbCount.push(bookCount);
-        });
-        await Author.countDocuments({}, function(err, authorCount) {
-            dbCount.push(authorCount);
-        });
-        await Genre.countDocuments({}, function(err, genreCount) {
-            dbCount.push(genreCount);
-        });
 
-        res.render('index', { title: 'Local Library Home' , message: '', data: dbCount });
+        const bookCount = await Book.countDocuments();
+        const authorCount = await Author.countDocuments();
+        const genreCount = await Genre.countDocuments();
+
+        // dbCount[await bookCount, await authorCount, await genreCount];
+
+        // await Book.countDocuments({}, function(err, bookCount) {
+        //     dbCount.push(bookCount);
+        // });
+        // await Author.countDocuments({}, function(err, authorCount) {
+        //     dbCount.push(authorCount);
+        // });
+        // await Genre.countDocuments({}, function(err, genreCount) {
+        //     dbCount.push(genreCount);
+        // });
+
+        res.render('index', { title: 'Local Library Home' , message: '', bookCount: bookCount, authorCount: authorCount, genreCount: genreCount});
     
     } catch(err) {
         res.render('index', { title: 'Local Library Home', message: 'There was a problem retrieving database data' });
     } 
-   
-    // This would return the number of data using this Model?
-    // async function bookCount() {
-    //     try {
-    //         // result = await Book.countDocuments({});
-    //         Book.count({type: "books"}, function (err, count) {
-    //             result = count;
-    //             if(err) {
-    //                 console.log(err)
-    //             } else {
-    //                 console.log(count)
-    //             }
-    //         });
-           
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-
-    // This is what we want to return eventually
-    // book_count: function(callback) {
-    //     Book.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
-    // },
-    // book_instance_count: function(callback) {
-    //     BookInstance.countDocuments({}, callback);
-    // },
-    // book_instance_available_count: function(callback) {
-    //     BookInstance.countDocuments({status:'Available'}, callback);
-    // },
-    // author_count: function(callback) {
-    //     Author.countDocuments({}, callback);
-    // },
-    // genre_count: function(callback) {
-    //     Genre.countDocuments({}, callback);
-    // }
-    // }
-
-    
-    // bookCount();
-    
-    
-    
-    
-
-
-    // async.parallel({
-    //     book_count: function(callback) {
-    //         Book.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
-    //     },
-    //     book_instance_count: function(callback) {
-    //         BookInstance.countDocuments({}, callback);
-    //     },
-    //     book_instance_available_count: function(callback) {
-    //         BookInstance.countDocuments({status:'Available'}, callback);
-    //     },
-    //     author_count: function(callback) {
-    //         Author.countDocuments({}, callback);
-    //     },
-    //     genre_count: function(callback) {
-    //         Genre.countDocuments({}, callback);
-    //     }
-    // }, function(err, results) {
-    //     res.render('index', { title: 'Local Library Home', error: err, data: results });
-    // });
-    // res.render('index', { title: 'Local Library Home', error: err, data: results });
 };
 
 // Display list of all books.
-exports.book_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book list');
+exports.book_list = async(req, res) => {
+
+    // Handle errors, try/catch?
+    const booksQuery = Book.find();
+    const books = await booksQuery;
+
+    res.render('books', {books: books});
 };
 
 // Display detail page for a specific book.
-exports.book_detail = function(req, res) {
-    res.send(`NOT IMPLEMENTED: Book detail: ${req.params.id}`);
+exports.book_detail = async(req, res) => {
+
+    // Handle errors, try/catch?
+    const bookId = `${req.params.id}`;
+    const bookQuery = Book.findById(bookId);
+
+    const book = await bookQuery;
+
+    res.render('book_detail', {book: book});
 };
 
 // Display book create form on GET.
 exports.book_create_get = async(req, res) => {
 
+    // Handle errors try/catch?
     // Query for the existing Genres and pass them down to create a dropdown with existing genres.
     const genreQuery = Genre.find();
     const genres = await genreQuery;
@@ -187,11 +141,15 @@ exports.book_create_post = [
             return;
         }
         else {
-            // Data from form is valid. Save book.
 
-            console.log('success', book);
-            
-            book.save();
+            // Data from form is valid. Save book.
+            book.save(function (err) {
+                if (err) { return next(err); }
+
+                const bookId = book.id
+                   
+                res.redirect(`/catalog/book/${book.id}`);
+                });
         }
     }
 ];
