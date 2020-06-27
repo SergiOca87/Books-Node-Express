@@ -71,7 +71,10 @@ exports.book_create_get = async(req, res) => {
     const authorsQuery = Author.find();
     const authors = await authorsQuery;
 
-    res.render('book_form', { title: 'Create Book', genres: genres, authors: authors });
+    //Adding an empty book as ejs complains of undefined variable but if/else does not work...Check for posssible alternative
+    const book = '';
+
+    res.render('book_form', { title: 'Create Book', book: book, genres: genres, authors: authors });
 };
 
 // Handle book create on POST.
@@ -99,7 +102,8 @@ exports.book_create_post = [
             summary: req.body.summary,
             isbn: req.body.isbn,
             rating: req.body.rating,
-            genre: req.body.genre
+            genre: req.body.genre,
+            finished: req.body.finished
            });
 
         // Genres.find({}, function(err, genres) {
@@ -165,11 +169,79 @@ exports.book_delete_post = function(req, res) {
 };
 
 // Display book update form on GET.
-exports.book_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book update GET');
+exports.book_update_get = async(req, res) => {
+
+    // Fetch the Book by ID
+    const bookId = `${req.params.id}`;
+
+    // Query for existing Books
+    const bookQuery = Book.findById(bookId);
+
+    const authorsQuery = Author.find();
+
+    // Query for existing Authors
+    const genreQuery = Genre.find();
+    
+    
+    const book = await bookQuery;
+    const authors = await authorsQuery;
+    const genres = await genreQuery;
+
+    // Handle errors, try/catch?
+    res.render('book_form', { title: 'Edit Book Entry', book: book, authors: authors, genres: genres });
 };
 
 // Handle book update on POST.
-exports.book_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book update POST');
-};
+exports.book_update_post = [
+    
+    // Validate fields.
+    body('title', 'Title must not be empty.').trim().isLength({ min: 1 }),
+    body('author', 'Author must not be empty.').trim().isLength({ min: 1 }),
+    body('summary', 'Summary must not be empty.').trim().isLength({ min: 1 }),
+    body('isbn', 'ISBN must not be empty').trim().isLength({ min: 1 }),
+  
+    // Sanitize fields (using wildcard).
+    body('*').escape(),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+        
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        // Create a Book object with escaped and trimmed data.
+        var book = new Book(
+          { title: req.body.title,
+            author: req.body.author,
+            summary: req.body.summary,
+            isbn: req.body.isbn,
+            rating: req.body.rating,
+            genre: req.body.genre,
+            finished: req.body.finished,
+            _id:req.params.id //This is required, or a new ID will be assigned!
+           });
+
+           console.log(book);
+
+        if (!errors.isEmpty()) {
+            res.render('book_form', { title: 'Update Book Entry', book: book, errors: errors.array() });
+            return;
+        }
+        else {
+
+            // Data from form is valid. Save book.
+            Book.findByIdAndUpdate(req.params.id, book, {}, function (err, book) {
+                if (err) { return next(err); }
+                   // Successful - redirect to book detail page.
+                   res.redirect(`/catalog/book/${book.id}`);
+                });
+            // book.save(function (err) {
+            //     if (err) { return next(err); }
+
+            //     const bookId = book.id
+                   
+            //     res.redirect(`/catalog/book/${book.id}`);
+            //     });
+       }
+    }
+];

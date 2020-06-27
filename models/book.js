@@ -11,8 +11,9 @@ var BookSchema = new Schema(
     summary: {type: String, required: true},
     isbn: {type: String, required: true},
     rating: {type: Number, min: 0, max: 5},
-    genre: [{type: Schema.Types.ObjectId, ref: 'Genre', required: true}]
+    genre: [{type: Schema.Types.ObjectId, ref: 'Genre', required: true}],
     // genre: {type: String, required: true}
+    finished: {type: Boolean, required: true, default: false}
   }
 );
 
