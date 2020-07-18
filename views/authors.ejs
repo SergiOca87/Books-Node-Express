@@ -1,13 +1,15 @@
 <%- include('header'); -%>
 
-<div class="container mt-5">
-    <div class="row">
-        <% books.forEach(function(book) { %>
+
+<!-- Order by surname  -->
+<div class="container">
+    <div class="row mt-5">
+        <% authors.forEach(function(author) { %>
             <div class="col-md-6 col-lg-4">
                 <div class="card text-dark">
                     <div class="card-body">
-                        <h3><%= book.title %></h3>
-                        <a href="/catalog/book/<%= book._id %>">More Info</a>
+                        <h3><%= author.family_name %>, <%= author.first_name %></h3>
+                        <a href="/catalog/author/<%= author._id %>">More Info</a>
                     </div>
                 </div>
             </div>

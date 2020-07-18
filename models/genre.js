@@ -6,15 +6,16 @@ var Schema = mongoose.Schema;
 
 var GenreSchema = new Schema(
     {
-        name: {type: String, min: 3, max: 100, required: true},
+      name: {type: String, min: 3, max: 100, required: true}
     }
 )
 
 // Virtual for book's URL
+// For later maybe add some other data or delete indivisual route
 GenreSchema
 .virtual('url')
 .get(function () {
-  return '/catalog/genre/' + this._id;
+  return '/catalog/genres/'
 });
 
 //Export model

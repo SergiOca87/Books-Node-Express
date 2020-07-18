@@ -2,22 +2,29 @@
 
 <div class="container">
     <div class="row">
-        <div class="col">
-            <h1><%= book.title %></h1>
-            <!-- How do you get the author and genre? It is referenced by id, Genre is an ID -->
-            <p><strong>By: </strong><br> - </p>
-            <p><strong>Summary:</strong><br><%= book.summary %></p>
-            <p><strong>Rating: </strong><%= book.rating %></p>
-            <p><strong>Genre: </strong> - </p>
-            <p>
-                <strong>Finished: (<%= book.finished %>)</strong>
-                <% if(book.finished) { %>
-                    <span class="alert alert-primary">Finished</span>
-                <% } else { %>
-                    <span class="alert alert-danger">Not Finished</span>
-                <% } %>
-            </p>
-            <a href="/catalog/book/<%= book._id %>/update">Edit This Book Entry</a>
+        <div class="col mt-5">
+            <div class="card card-small text-dark">
+                <div class="card-body py-4">
+                    <h1><%= book.title %></h1>
+                    <!-- How do you get the author and genre? It is referenced by id, Genre is an ID -->
+                    <p><strong>By:</strong> <%= book.author.family_name %>, <%= book.author.first_name %><br></p>
+
+                    <p><strong>Summary:</strong><br><%= book.summary %></p>
+                    <p><strong>Rating: </strong><%= book.rating %></p>
+
+                    <!-- Why is book-genre.name not showing anything...? -->
+                    <p><strong>Genre: </strong> <%= book.genre[0].name %></p>
+                    <p>
+                        <strong>Finished: (<%= book.finished %>)</strong>
+                        <% if(book.finished) { %>
+                            <span class="alert alert-primary">Finished</span>
+                        <% } else { %>
+                            <span class="alert alert-danger">Not Finished</span>
+                        <% } %>
+                    </p>
+                    <a href="/catalog/book/<%= book._id %>/update">Edit This Book Entry</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -5,8 +5,12 @@ const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 
 // Display list of all Genre.
-exports.genre_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre list');
+exports.genre_list = async(req, res) => {
+    
+    const genreQuery = Genre.find();
+    const genres = await genreQuery;
+
+    res.render('genres', {genres: genres});
 };
 
 // Display detail page for a specific Genre.
@@ -49,6 +53,8 @@ exports.genre_create_post = [
             console.log('success', genre);
             
             genre.save();
+
+            res.redirect(genre.url);
         }
     }
 ];

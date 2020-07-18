@@ -20,7 +20,7 @@
             <label for="author">Author:</label>
             <select name="author" id="author">
                 <% authors.forEach(function(author){ %>
-                    <option value="<%= author._id %>"><%= author.first_name %></option>
+                    <option value="<%= author._id %>"><%= author.family_name %>, <%= author.first_name %></option>
                 <% }) %>
             </select>
         </div>

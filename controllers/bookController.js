@@ -7,6 +7,7 @@ var BookInstance = require('../models/bookInstance');
 // Express Validator 
 const { body,validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
+const author = require('../models/author');
 
 exports.index = async(req, res) => {
 
@@ -18,19 +19,9 @@ exports.index = async(req, res) => {
         const authorCount = await Author.countDocuments();
         const genreCount = await Genre.countDocuments();
 
-        // dbCount[await bookCount, await authorCount, await genreCount];
+       
 
-        // await Book.countDocuments({}, function(err, bookCount) {
-        //     dbCount.push(bookCount);
-        // });
-        // await Author.countDocuments({}, function(err, authorCount) {
-        //     dbCount.push(authorCount);
-        // });
-        // await Genre.countDocuments({}, function(err, genreCount) {
-        //     dbCount.push(genreCount);
-        // });
-
-        res.render('index', { title: 'Local Library Home' , message: '', bookCount: bookCount, authorCount: authorCount, genreCount: genreCount});
+        res.render('index', { title: 'Express - Mongo Library' , message: '', bookCount: bookCount, authorCount: authorCount, genreCount: genreCount});
     
     } catch(err) {
         res.render('index', { title: 'Local Library Home', message: 'There was a problem retrieving database data' });
@@ -52,9 +43,14 @@ exports.book_detail = async(req, res) => {
 
     // Handle errors, try/catch?
     const bookId = `${req.params.id}`;
-    const bookQuery = Book.findById(bookId);
+
+    const bookQuery = await Book.findById(bookId).populate('genre').populate('author');
+    // const genreQuery = Genre.findById(bookId);
+    // const authorQuery = Author.findById(bookId);
 
     const book = await bookQuery;
+    // const genre = await genreQuery;
+    // const author = await authorQuery;
 
     res.render('book_detail', {book: book});
 };
@@ -152,7 +148,7 @@ exports.book_create_post = [
 
                 const bookId = book.id
                    
-                res.redirect(`/catalog/book/${book.id}`);
+                res.redirect(book.url);
                 });
         }
     }

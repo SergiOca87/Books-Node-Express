@@ -2,22 +2,45 @@
 
 <div class="container">
     <div class="row">
-        <div class="col">
-            <h1><%= title %></h1>
-            <p>Welcome to <%= title %></p>
-            <p>Description - Explain Book, author and genre relationships and ORM "paradigm" as opposed to SQL language like you used for the other App, add link.</p>
+        <div class="p-5 d-flex flex-column justify-content-center align-items-center text-center">
+            <h1 class="mb-3"><%= title %></h1>
+            <p>CRUD Full stack App to study Node, Express and Mongo DB. It utilizes an ORM paradigm ad it focuses on the data relationships. Each Book has a relationship with the existing authors and the existing genres.</p>
             <p><%= message %></p>
+            <p>Find the Source Code <a href="https://github.com/SergiOca87/Books-Node-Express" target="_blank">here</a></p>
         </div>
     </div>  
 
+    <h2 class="text-center mb-3">Database content found:</h2>
     <div class="row">
-        <div class="col">
-            <h2>Database content found:</h2>
-            <p>Books: We have found <%= bookCount %> book/s.</p>
-            <p>Authors: We have found <%= authorCount %> author/s.</p>
-            <p>Genres: We have found <%= genreCount %> genre/s.</p>
+       
+            <div class="col-md-4">
+                <div class="card text-dark d-flex justify-content-center" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Books:</h5>
+                      <p class="card-text">We have found <h4><a href="/catalog/books"><strong><%= bookCount %></strong></a></h4> book/s</p>
+                      <a href="/catalog/book/create" class="card-link">Add Books</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-dark d-flex justify-content-center" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Authors:</h5>
+                      <p class="card-text">We have found <h4><a href="/catalog/authors"><strong><%= authorCount %></strong></a></h4> author/s.</p>
+                      <a href="/catalog/author/create" class="card-link">Add Author</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-dark d-flex justify-content-center" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Genres:</h5>
+                      <p class="card-text">We have found <h4><a href="/catalog/genres"><strong><%= genreCount %></strong></a></h4> genre/s.</p>
+                      <a href="#" class="card-link">Add Genre</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 </div>
     
 <%- include('footer'); -%>

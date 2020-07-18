@@ -1,13 +1,13 @@
 <%- include('header'); -%>
 
-<div class="container mt-5">
-    <div class="row">
-        <% books.forEach(function(book) { %>
+<div class="container">
+    <div class="row mt-5">
+        <% genres.forEach(function(genre) { %>
             <div class="col-md-6 col-lg-4">
                 <div class="card text-dark">
                     <div class="card-body">
-                        <h3><%= book.title %></h3>
-                        <a href="/catalog/book/<%= book._id %>">More Info</a>
+                        <h3><%= genre.name %></h3>
+                        <a href="/catalog/genre/<%= genre._id %>">More Info</a>
                     </div>
                 </div>
             </div>

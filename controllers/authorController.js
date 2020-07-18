@@ -5,8 +5,12 @@ const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 
 // Display list of all Authors.
-exports.author_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author list');
+exports.author_list = async(req, res) => {
+    
+    const AuthorsQuery = Author.find();
+    const authors = await AuthorsQuery;
+
+    res.render('authors', {authors: authors});
 };
 
 // Display detail page for a specific Author.

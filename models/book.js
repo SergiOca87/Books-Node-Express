@@ -21,8 +21,7 @@ var BookSchema = new Schema(
 BookSchema
 .virtual('url')
 .get(function () {
-  // return '/catalog/book/' + this._id;
-  console.log('Test');
+  return '/catalog/book/' + this._id;
 });
 
 //Export model
